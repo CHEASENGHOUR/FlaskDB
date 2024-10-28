@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Flask</h1>
+    <input type="text" id="item" placeholder="Enter your name">
+    <button id="add_item" >Add</button>
+    <div class="data">
+
+    </div>
+</body>
+<script>
+    const dataElement = document.querySelector('.data');
+
+    const itemInput = document.querySelector('#item');
+    const addButton = document.querySelector('#add_item');
+
+    addButton.addEventListener('click', => {
+        let item = itemInput.value;
+        fetch('http://127.0.0.1:5000/items', {
+            methods: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({name : item})
+        }).then(res => res.json())
+        .then(data => console.log(data))
+    })
+
+    fetch('http://127.0.0.1:5000/items')
+    .then(res => res.json())
+    .then(data => handler(data))
+
+    if (data.length == 0){
+        dataElement.innerHTML = 'No Items';
+        return;
+    }else{
+        dataElement.innerHTML = '';
+    }
+
+    handler = (data) => {
+        data.forEach(element => {
+            let p = document.createElement('p');
+            p.innerHTML = element.name;
+            dataElement.appendChild(p);
+        })
+    }
+</script>
+</html>
